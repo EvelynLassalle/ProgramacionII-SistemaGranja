@@ -8,6 +8,7 @@ public class DetalleCompra {
     public DetalleCompra (int cantidad, double precioUnitario) {
         this.cantidad = cantidad;
         this.precioUnitario = precioUnitario;
+        validar();
     }
 
     public int getCantidad() {
@@ -27,6 +28,22 @@ public class DetalleCompra {
     }
 
     public double calcularSubtotal() {
+
         return cantidad * precioUnitario;
+    }
+
+    public void validar() {
+
+        if (cantidad <= 0) {
+            throw new IllegalArgumentException(
+                "La cantidad debe ser mayor a cero"
+            );
+        }
+
+        if (precioUnitario <= 0 || !Double.isFinite(precioUnitario)) {
+            throw new IllegalArgumentException(
+                "El precio unitario debe ser mayor a cero y válido"
+            );
+        }
     }
 }

@@ -15,6 +15,9 @@ public class Compra extends Gasto {
     }
     
     public void agregarDetalle(DetalleCompra detalle) {
+        if (detalle == null) {
+            throw new IllegalArgumentException("El detalle no puede ser nulo");
+        }
         detalles.add(detalle);
     }
 
@@ -22,12 +25,24 @@ public class Compra extends Gasto {
         return detalles;
     }
 
-    @Override
-    public void registrar() {
-    }
-
+    
     @Override
     public void validar() {
+        super.validar();
+        if (detalles.isEmpty()) {
+            throw new IllegalArgumentException("La compra debe tener al menos un detalle.");
+        }
+
+        for (DetalleCompra detalle : detalles) {
+            if (detalle == null) {
+                throw new IllegalArgumentException(
+                    "La compra no puede contener detalles nulos"
+                );
+            }
+        }
+        if (calcularTotal() != getMonto()) {
+            throw new IllegalArgumentException("El monto de la compra no coincide con la suma de los detalles.");
+        }
     }
 
     @Override

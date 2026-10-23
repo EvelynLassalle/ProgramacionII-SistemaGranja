@@ -62,9 +62,22 @@ public abstract class Movimiento {
         this.descripcion = descripcion;
     }
 
-    public abstract void registrar();
 
-    public abstract void validar();
+    public  void validar(){
+        if (fecha == null) {
+            throw new IllegalArgumentException("La fecha es obligatoria");
+        }
 
-    public abstract double calcularImpacto();
+        if (concepto == null || concepto.isBlank()) {
+            throw new IllegalArgumentException("El concepto no puede estar vacío");
+        }
+
+        if (monto <= 0 || !Double.isFinite(monto)) {
+            throw new IllegalArgumentException("El monto debe ser mayor a cero y válido");
+        }
+    }
+
+    public  double calcularImpacto(){
+        return monto;
+    }
 }

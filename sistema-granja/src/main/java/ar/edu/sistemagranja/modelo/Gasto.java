@@ -21,16 +21,6 @@ public class Gasto extends Movimiento {
         this.categoria = categoria;
     }
 
-    @Override
-    public void registrar() {
-    }
 
-    @Override
-    public void validar() {
-    }
 
-    @Override
-    public double calcularImpacto() {
-        return 0;
-    }
 }

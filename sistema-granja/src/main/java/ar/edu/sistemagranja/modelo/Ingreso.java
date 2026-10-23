@@ -21,16 +21,5 @@ public class Ingreso extends Movimiento {
         this.tipoIngreso = tipoIngreso;
     }
 
-    @Override
-    public void registrar() {
-    }
 
-    @Override
-    public void validar() {
-    }
-
-    @Override
-    public double calcularImpacto() {
-        return 0;
-    }
 }
