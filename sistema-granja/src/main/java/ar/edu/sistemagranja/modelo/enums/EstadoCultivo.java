@@ -1,4 +1,4 @@
-package ar.edu.sistemagranja.modelo;
+package ar.edu.sistemagranja.modelo.enums;
 
 public enum EstadoCultivo {
     SEMBRADO,

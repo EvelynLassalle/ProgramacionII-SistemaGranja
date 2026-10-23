@@ -1,4 +1,3 @@
-
 package ar.edu.sistemagranja.modelo;
 
 import java.time.LocalDate;
@@ -6,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import ar.edu.sistemagranja.modelo.enums.EstadoCultivo;
 
 public class Cultivo {
 
@@ -47,59 +47,9 @@ public class Cultivo {
         );
     }
 
-    /*
-     * Constructor utilizado por las clases hijas.
-     * Inicializa los atributos heredados con los datos del cultivo.
-     * El ID corresponde al registro creado.
-     *
-     * Los atributos heredados son una copia inicial:
-     * no se sincronizan automáticamente con el cultivo original.
-     */
-    protected Cultivo(int id, Cultivo cultivo) {
-        Objects.requireNonNull(cultivo, "El cultivo es obligatorio.");
-
-        this.id = id;
-        this.nombre = cultivo.getNombre();
-        this.variedad = cultivo.getVariedad();
-        this.fechaSiembra = cultivo.getFechaSiembra();
-        this.superficie = cultivo.getSuperficie();
-        this.cantidadSembrada = cultivo.getCantidadSembrada();
-        this.estado = cultivo.getEstado();
-        this.fechaEstimadaCosecha = cultivo.getFechaEstimadaCosecha();
-        this.sector = cultivo.getSector();
-    }
-
+ 
     public void registrar() {
-        validarId();
-
-        if (nombre == null || nombre.trim().isEmpty()) {
-            throw new IllegalStateException("El nombre es obligatorio.");
-        }
-
-        if (fechaSiembra == null) {
-            throw new IllegalStateException(
-                "La fecha de siembra es obligatoria."
-            );
-        }
-
-        if (!Double.isFinite(superficie) || superficie <= 0) {
-            throw new IllegalStateException(
-                "La superficie debe ser positiva."
-            );
-        }
-
-        if (!Double.isFinite(cantidadSembrada) || cantidadSembrada <= 0) {
-            throw new IllegalStateException(
-                "La cantidad sembrada debe ser positiva."
-            );
-        }
-
-        if (fechaEstimadaCosecha != null
-                && fechaEstimadaCosecha.isBefore(fechaSiembra)) {
-            throw new IllegalStateException(
-                "La cosecha estimada no puede ser anterior a la siembra."
-            );
-        }
+        validar();
 
         sector.agregarCultivo(this);
 
@@ -109,15 +59,43 @@ public class Cultivo {
         }
     }
 
-    protected void validarId() {
+    public void validar() {
         if (id <= 0) {
-            throw new IllegalStateException("El ID debe ser positivo.");
+            throw new IllegalArgumentException("El ID debe ser positivo.");
+        }
+        if (nombre == null || nombre.isBlank()) {
+            throw new IllegalArgumentException(
+                "El nombre es obligatorio"
+            );
+        }
+
+        if (fechaSiembra == null) {
+            throw new IllegalArgumentException(
+                "La fecha de siembra es obligatoria"
+            );
+        }
+
+        if (!Double.isFinite(superficie) || superficie <= 0) {
+            throw new IllegalArgumentException(
+                "La superficie debe ser mayor que cero"
+            );
+        }
+
+        if (!Double.isFinite(cantidadSembrada) ||
+                cantidadSembrada <= 0) {
+            throw new IllegalArgumentException(
+                "La cantidad sembrada debe ser mayor que cero"
+            );
+        }
+
+        if (fechaEstimadaCosecha != null &&
+                fechaEstimadaCosecha.isBefore(fechaSiembra)) {
+            throw new IllegalArgumentException(
+                "La cosecha estimada no puede ser anterior a la siembra"
+            );
         }
     }
 
-    protected void marcarRegistrado() {
-        registrado = true;
-    }
 
     public void cambiarEstado(EstadoCultivo nuevoEstado) {
         Objects.requireNonNull(nuevoEstado, "El estado es obligatorio.");

@@ -1,67 +1,119 @@
+
 package ar.edu.sistemagranja.modelo;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
-public class Riego extends Cultivo {
+public class Riego {
 
-    // El atributo id y sus accesores se heredan de Cultivo.
+    private int id;
     private LocalDate fecha;
     private double cantidadAgua;
     private String observaciones;
     private final Cultivo cultivo;
 
+    // Constructor
     public Riego(int id, LocalDate fecha, double cantidadAgua,
                  String observaciones, Cultivo cultivo) {
-        super(id, cultivo);
+
+        this.id = id;
         this.fecha = fecha;
         this.cantidadAgua = cantidadAgua;
         this.observaciones = observaciones;
-        this.cultivo = cultivo;
+        this.cultivo = Objects.requireNonNull(
+            cultivo, "El cultivo es obligatorio"
+        );
     }
 
-    @Override
-    public void registrar() {
-        validarId();
+    // Validaciones
+    public void validar() {
 
-        if (fecha == null) {
-            throw new IllegalStateException("La fecha es obligatoria.");
-        }
-
-        if (!Double.isFinite(cantidadAgua) || cantidadAgua <= 0) {
-            throw new IllegalStateException(
-                "La cantidad de agua debe ser positiva."
+        if (id <= 0) {
+            throw new IllegalArgumentException(
+                "El ID del riego debe ser positivo"
             );
         }
 
+        if (fecha == null) {
+            throw new IllegalArgumentException(
+                "La fecha del riego es obligatoria"
+            );
+        }
+
+        if (!Double.isFinite(cantidadAgua) ||
+                cantidadAgua <= 0) {
+            throw new IllegalArgumentException(
+                "La cantidad de agua debe ser mayor a cero"
+            );
+        }
+
+        if (fecha.isBefore(cultivo.getFechaSiembra())) {
+            throw new IllegalArgumentException(
+                "El riego no puede ser anterior a la siembra"
+            );
+        }
+    }
+
+    // Registrar el riego en la lista del cultivo
+    public void registrar() {
+        validar();
         cultivo.agregarRiego(this);
-        marcarRegistrado();
+    }
+
+    // Getters
+    public int getId() {
+        return id;
     }
 
     public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
-    }
-
     public double getCantidadAgua() {
         return cantidadAgua;
-    }
-
-    public void setCantidadAgua(double cantidadAgua) {
-        this.cantidadAgua = cantidadAgua;
     }
 
     public String getObservaciones() {
         return observaciones;
     }
 
-    public void setObservaciones(String observaciones) {
-        this.observaciones = observaciones;
-    }
-
     public Cultivo getCultivo() {
         return cultivo;
+    }
+
+    // Setters
+    public void setId(int id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException(
+                "El ID debe ser positivo"
+            );
+        }
+        this.id = id;
+    }
+
+    public void setFecha(LocalDate fecha) {
+        Objects.requireNonNull(fecha, "La fecha es obligatoria");
+
+        if (fecha.isBefore(cultivo.getFechaSiembra())) {
+            throw new IllegalArgumentException(
+                "El riego no puede ser anterior a la siembra"
+            );
+        }
+
+        this.fecha = fecha;
+    }
+
+    public void setCantidadAgua(double cantidadAgua) {
+        if (!Double.isFinite(cantidadAgua) ||
+                cantidadAgua <= 0) {
+            throw new IllegalArgumentException(
+                "La cantidad de agua debe ser positiva"
+            );
+        }
+        this.cantidadAgua = cantidadAgua;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 }
