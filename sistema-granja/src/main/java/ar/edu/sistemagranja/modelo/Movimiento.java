@@ -1,25 +1,25 @@
 package ar.edu.sistemagranja.modelo;
 
 import java.time.LocalDate;
-import ar.edu.sistemagranja.modelo.enums.TipoMovimiento;
 
-public class Movimiento {
-    
+public abstract class Movimiento {
+
     private int id;
     private LocalDate fecha;
     private String concepto;
     private double monto;
-    private TipoMovimiento tipo;
     private String descripcion;
 
-    public Movimiento(int id, LocalDate fecha, String concepto, 
-    double monto, TipoMovimiento tipo, String descripcion) {
+    public Movimiento(int id, LocalDate fecha, String concepto, double monto, String descripcion) {
         this.id = id;
         this.fecha = fecha;
         this.concepto = concepto;
         this.monto = monto;
-        this.tipo = tipo;
         this.descripcion = descripcion;
+    }
+
+    public Movimiento() {
+
     }
 
     public int getId() {
@@ -54,14 +54,6 @@ public class Movimiento {
         this.monto = monto;
     }
 
-    public TipoMovimiento getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(TipoMovimiento tipo) {
-        this.tipo = tipo;
-    }
-
     public String getDescripcion() {
         return descripcion;
     }
@@ -70,7 +62,22 @@ public class Movimiento {
         this.descripcion = descripcion;
     }
 
-    public void registrar() {}
 
+    public  void validar(){
+        if (fecha == null) {
+            throw new IllegalArgumentException("La fecha es obligatoria");
+        }
+
+        if (concepto == null || concepto.isBlank()) {
+            throw new IllegalArgumentException("El concepto no puede estar vacío");
+        }
+
+        if (monto <= 0 || !Double.isFinite(monto)) {
+            throw new IllegalArgumentException("El monto debe ser mayor a cero y válido");
+        }
+    }
+
+    public  double calcularImpacto(){
+        return monto;
+    }
 }
-
